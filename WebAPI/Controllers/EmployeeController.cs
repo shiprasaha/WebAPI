@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
         {
             string query = @"
                               select EmployeeId, EmployeeName, Department,
-                              convert(varchar(10),DateOfJoining,120) as DateOfJoining, PhotoFileName
+                              convert(varchar(10),DateOfJoining,120) as DateOfJoining
                               from dbo.Employee";
 
             DataTable table = new DataTable();
@@ -56,42 +56,50 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult Post(Employee emp)
         {
-            string query = @"
-                              insert into dbo.Employee 
-                              (EmployeeName,Department,DateOfJoining,PhotoFileName)
-                              values 
-                              (
-                              '" + emp.EmployeeName + @"'
-                              ,'" + emp.Department + @"'
-                              ,'" + emp.DateOfJoining + @"'
-                              ,'" + emp.PhotoFileName + @"'
-                              )
-                              ";
+            //string query = @"
+            //                  insert into dbo.Employee 
+            //                  (EmployeeId,EmployeeName,Department,DateOfJoining)
+            //                  values 
+            //                  (
+            //                  '" + emp.EmployeeId + @"'
+            //                  '" + emp.EmployeeName + @"'
+            //                  ,'" + emp.Department + @"'
+            //                  ,'" + emp.DateOfJoining + @"'
+            //                  )
+            //                  ";
 
-            DataTable table = new DataTable();
+            //DataTable table = new DataTable();
 
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
+            //string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
 
-            SqlDataReader myReader;
+            //SqlDataReader myReader;
 
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            //using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            //{
+            //    myCon.Open();
+            //    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+            //    {
+            //        myReader = myCommand.ExecuteReader();
+            //        table.Load(myReader);
+
+            //        myReader.Close();
+            //        myCon.Close();
+            //    }
+            //}
+
+            using (StreamWriter writer = new StreamWriter("C:\\Users\\shipr\\Desktop\\Result\\text.txt", append: true))
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
+                //foreach (var item in emp.EmployeeName)
+                //    writer.Write("Employee Name :" + item.ToString() + " ");
+                //foreach (var item in emp.Department)
+                //    writer.Write("Employee Department :" + item.ToString()+ " ");
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
+                writer.Write("Employee ID :" + emp.EmployeeId.ToString() + " ");
+                writer.Write("Employee Name :" + emp.EmployeeName.ToString() + " ");
+                writer.Write("Employee Department :" + emp.Department.ToString() + " ");
+                writer.Write("Employee DOJ :" + emp.DateOfJoining.ToString() + " ");
 
-            using (StreamWriter writer = new StreamWriter("C:\\Users\\shipr\\Desktop\\Result\\text.txt"))
-            {
-                writer.WriteLine("Added successfully");
-                foreach (var item in emp.Department)
-                    writer.Write(item.ToString());
+
             }
 
             return new JsonResult("Added successfully");
@@ -120,7 +128,9 @@ namespace WebAPI.Controllers
                 }
             }
 
-            return new JsonResult(table);
+            var departmentList = new string[] {"Class A" , "Class B"};
+
+            return new JsonResult(departmentList);
         }
     }
 }

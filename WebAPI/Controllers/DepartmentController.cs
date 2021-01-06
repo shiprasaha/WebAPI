@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public IActionResult Get()
         {
             string query = @"
                              SELECT DepartmentID, DepartmentName FROM dbo.Department";
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Department dep)
+        public IActionResult Post([FromBody] Department dep)
         {
             string query = @"
                              INSERT INTO dbo.Department VALUES
