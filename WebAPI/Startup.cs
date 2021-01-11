@@ -1,8 +1,3 @@
-//It configures all the Services needed for the App
-//Services are basically resuable components
-//can be used across using DI
-//It also has configure method (for app's request processing pipeline)
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
