@@ -23,113 +23,28 @@ namespace WebAPI.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
-        public ActionResult Get()
-        {
-            string query = @"
-                              select EmployeeId, EmployeeName, Department,
-                              convert(varchar(10),DateOfJoining,120) as DateOfJoining
-                              from dbo.Employee";
-
-            DataTable table = new DataTable();
-
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-
-            SqlDataReader myReader;
-
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult(table);
-        }
-
         [HttpPost]
         public ActionResult Post(Employee emp)
         {
-            //string query = @"
-            //                  insert into dbo.Employee 
-            //                  (EmployeeId,EmployeeName,Department,DateOfJoining)
-            //                  values 
-            //                  (
-            //                  '" + emp.EmployeeId + @"'
-            //                  '" + emp.EmployeeName + @"'
-            //                  ,'" + emp.Department + @"'
-            //                  ,'" + emp.DateOfJoining + @"'
-            //                  )
-            //                  ";
+            var filepath = "C:\\Users\\shipr\\Desktop\\Result\\employeeData.txt";
+            List<String> lines = new List<string>(System.IO.File.ReadAllLines(filepath));
 
-            //DataTable table = new DataTable();
-
-            //string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-
-            //SqlDataReader myReader;
-
-            //using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            //{
-            //    myCon.Open();
-            //    using (SqlCommand myCommand = new SqlCommand(query, myCon))
-            //    {
-            //        myReader = myCommand.ExecuteReader();
-            //        table.Load(myReader);
-
-            //        myReader.Close();
-            //        myCon.Close();
-            //    }
-            //}
-
-            using (StreamWriter writer = new StreamWriter("C:\\Users\\shipr\\Desktop\\Result\\text.txt", append: true))
-            {
-                //foreach (var item in emp.EmployeeName)
-                //    writer.Write("Employee Name :" + item.ToString() + " ");
-                //foreach (var item in emp.Department)
-                //    writer.Write("Employee Department :" + item.ToString()+ " ");
-
+            using (StreamWriter writer = new StreamWriter(filepath, append: true)) {
                 writer.Write("Employee ID :" + emp.EmployeeId.ToString() + " ");
                 writer.Write("Employee Name :" + emp.EmployeeName.ToString() + " ");
                 writer.Write("Employee Department :" + emp.Department.ToString() + " ");
                 writer.Write("Employee DOJ :" + emp.DateOfJoining.ToString() + " ");
-
-
+                writer.Write("\r\n");
             }
 
+            lines.Add(" ");
             return new JsonResult("Added successfully");
         }
-
 
         [Route("GetAllDepartmentNames")]
         public JsonResult GetAllDepartmentNames()
         {
-            string query = @"
-                    select DepartmentName from dbo.Department
-                    ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            var departmentList = new string[] {"Class A" , "Class B"};
-
+            var departmentList = new string[] {"Finance" , "IT", "Management"};
             return new JsonResult(departmentList);
         }
     }

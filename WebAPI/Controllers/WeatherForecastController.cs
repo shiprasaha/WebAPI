@@ -1,6 +1,4 @@
-﻿//Here we write all our API endpoints method
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

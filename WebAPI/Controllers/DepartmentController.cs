@@ -24,73 +24,23 @@ namespace WebAPI.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
-        public IActionResult Get()
-        {
-            string query = @"
-                             SELECT DepartmentID, DepartmentName FROM dbo.Department";
-
-            DataTable table = new DataTable();
-
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-
-            SqlDataReader myReader;
-
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult(table);
-        }
-
         [HttpPost]
         public IActionResult Post([FromBody] Department dep)
         {
-            string query = @"
-                             INSERT INTO dbo.Department VALUES
-                             ('" + dep.DepartmentName + @"')
-                            ";
-
-            DataTable table = new DataTable();
-
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-
-            SqlDataReader myReader;
-
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
             var filepath = "C:\\Users\\shipr\\Desktop\\Result\\department.txt";
+            List<string> department = new List<string>();
+            List<String> lines = new List<string>(System.IO.File.ReadAllLines(filepath));
 
             using (StreamWriter writer = new StreamWriter(filepath, append: true))
             {
-                foreach (var item in dep.DepartmentName)
-                {
-                    writer.Write(item.ToString());
-                }
-                writer.WriteLine(" ");
+                    writer.Write("Department ID :" + dep.DepartmentID.ToString() + " ");
+                    writer.Write("Department Name :" + dep.DepartmentName.ToString() + " ");
+                    writer.Write("\r\n");
 
+                    department.Add(dep.DepartmentName.ToString());
             }
 
+            lines.Add(" ");
             return new JsonResult("Added successfully");
         }
 
