@@ -26,10 +26,10 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult Post(Employee emp)
         {
-            var filepath = "C:\\Users\\shipr\\Desktop\\Result\\employeeData.txt";
-            List<String> lines = new List<string>(System.IO.File.ReadAllLines(filepath));
+            var dirParameter = AppDomain.CurrentDomain.BaseDirectory + @"\file.txt";
+            var filepath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-            using (StreamWriter writer = new StreamWriter(filepath, append: true)) {
+            using (StreamWriter writer = new StreamWriter(filepath + "\\Result\\employeeData.txt", append: true)) {
                 writer.Write("Employee ID :" + emp.EmployeeId.ToString() + " ");
                 writer.Write("Employee Name :" + emp.EmployeeName.ToString() + " ");
                 writer.Write("Employee Department :" + emp.Department.ToString() + " ");
@@ -37,7 +37,6 @@ namespace WebAPI.Controllers
                 writer.Write("\r\n");
             }
 
-            lines.Add(" ");
             return new JsonResult("Added successfully");
         }
 

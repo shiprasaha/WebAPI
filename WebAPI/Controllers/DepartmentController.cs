@@ -27,22 +27,21 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Department dep)
         {
-            var filepath = "C:\\Users\\shipr\\Desktop\\Result\\department.txt";
+            var dirParameter = AppDomain.CurrentDomain.BaseDirectory + @"\file.txt";
+            var filepath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
             List<string> department = new List<string>();
-            List<String> lines = new List<string>(System.IO.File.ReadAllLines(filepath));
 
-            using (StreamWriter writer = new StreamWriter(filepath, append: true))
+            using (StreamWriter writer = new StreamWriter(filepath + "\\Result\\department.txt", append: true))
             {
-                    writer.Write("Department ID :" + dep.DepartmentID.ToString() + " ");
-                    writer.Write("Department Name :" + dep.DepartmentName.ToString() + " ");
-                    writer.Write("\r\n");
+                writer.Write("Department ID :" + dep.DepartmentID.ToString() + " ");
+                writer.Write("Department Name :" + dep.DepartmentName.ToString() + " ");
+                writer.Write("\r\n");
 
-                    department.Add(dep.DepartmentName.ToString());
+                department.Add(dep.DepartmentName.ToString());
             }
 
-            lines.Add(" ");
             return new JsonResult("Added successfully");
         }
-
     }
 }
